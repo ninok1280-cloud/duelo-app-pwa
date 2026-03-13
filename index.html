@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Duelo LP">
+<meta name="theme-color" content="#206865">
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<title>Duelo App</title>
+
+<style>
+
+/* --- BASE E LAYOUT --- */
+html, body { width: 100%; height: 100vh; overflow: hidden; margin: 0; padding: 0; }
+
+* {
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+
+body {
+    background: radial-gradient(#222,#000);
+    background-image: url("fundo2.png");
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+
+.btn-icon {
+    width: 20px;       /* Largura do ícone */
+    height: 20px;      /* Altura do ícone */
+    vertical-align: middle;
+    margin-right: 5px; /* Espaço entre ícone e texto */
+    pointer-events: none; /* Evita que o clique pegue na imagem e não no botão */
+}
+
+/* Ajuste para botões que têm ícones e texto */
+.sidebar button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    padding: 10px;
+    box-sizing: border-box;
+    gap: 15px;
+}
+
+/* --- BARRA LATERAL --- */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 130px;
+    justify-content: center;
+}
+
+.btn-group-dice {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+}
+
+button {
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    border: none;
+    background: #444;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+	transition: transform 0.1s ease, filter 0.1s ease, outline 0.2s;
+}
+
+button:active {
+    transform: scale(0.95); /* Diminui o botão para 95% do tamanho original */
+    filter: brightness(1.3); /* Aumenta o brilho em 30% */
+}
+
+button i { font-style: normal; display: block; font-size: 18px; }
+
+/* --- CORES E EFEITO SELECIONADO --- */
+.btn-moeda { background: #ffc107; color: #333; font-weight: bold; font-size:12px;}
+.btn-dados-toggle { background: #e73725eb; font-weight: bold; font-size:12px;}
+.btn-lp-init { background: #007cc7; color: #fff; font-weight: bold; font-size:12px;}
+.btn-reset { background: #6895ba; color: black; font-weight: bold; font-size:12px; }
+.btn-d20 { background: #e73725eb; font-weight: bold; font-size:12px }
+.btn-d6 { background: #e73725eb; font-weight: bold; font-size:12px}
+
+/* CORES APENAS NO TEXTO DOS BOTÕES + E - NO LP */
+/* Mantém o fundo original cinza (#333) e muda só a cor da fonte */
+.btn-menos { color: #ff4444 !important; font-weight: bold; }
+.btn-mais { color: #2cd2a8 !important; font-weight: bold; }
+
+.selecionado { 
+    outline: 2px solid #43d6b1 !important; 
+    outline-offset: -3px; 
+    box-shadow: 0 0 7px rgba(16,255,0,0.5);
+}
+
+.btn-ROLAR-grande { 
+    background: #e73725eb !important; 
+    font-weight: bold; 
+    font-size: 24px; 
+    width: 200px; 
+    height: 80px; 
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(236, 144, 0, 0.4);
+}
+
+/* --- ÁREA PRINCIPAL --- */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.area { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; width: 100%; }
+
+/* DADOS E MOEDA */
+.dado { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 50px; background: #fff; color: #000; border-radius: 12px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border-bottom: 5px solid #ccc;}
+.dado-d20 { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+
+.moeda { 
+    width: 160px; height: 160px; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 18px; background: linear-gradient(145deg, #ffd700, #ff8c00); 
+    color: #3e2723; font-weight: bold; border: 4px solid #fff176; 
+	text-align: center;
+    cursor: pointer;
+	font-family: emoji;
+}
+
+.girar { animation: giro 0.5s infinite linear; }
+@keyframes giro { from {transform:rotateY(0deg);} to {transform:rotateY(360deg);} }
+
+/* LP DISPLAY */
+.lp-container { display: flex; justify-content: space-around; gap: 10px; width: 100%; height: 100%; }
+.lp-player { flex: 1; background: rgba(0, 0, 0, 0.5); padding: 5px; border-radius: 10px; border: 1px solid #007cc7; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+.lp-valor { font-size: 2.5rem; font-weight: bold; color: #2cd2a8; }
+.lp-teclado { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: 100%; }
+.lp-teclado button { height: 32px; font-size: 14px; background: #333; }
+/* Estilo base dos botões de controle de LP */
+.lp-controles { display: flex; gap: 5px; width: 100%; margin-top:4px; }
+.lp-controles button { font-size: 14px; flex: 1; height: 45px; background: #333; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <div class="sidebar">
+        <div id="controles-padrao">
+            <button id="btn-moeda-main" class="btn-moeda" onclick="prepararMoeda(this)" style="margin-bottom: 6px;">1ST / 2ND</button>
+        <button id="btn-dados-main" class="btn-dados-toggle" onclick="toggleModoDados(this)" style="margin-bottom: 6px;">
+        <img src="dados_icon.png" class="btn-icon"> DADOS 
+		</button>
+            <button id="btn-8000" class="btn-lp-init" onclick="iniciarLP(8000, this)" style="margin-bottom: 6px;">8000 LP</button>
+            <button id="btn-4000" class="btn-lp-init" onclick="iniciarLP(4000, this)" style="margin-bottom: 6px;">4000 LP</button>
+            <button class="btn-reset" onclick="location.reload()"> <img src="gear_icon.png" class="btn-icon"></button>
+        </div>
+
+        <div id="controles-dados" class="btn-group-dice">
+		<p style="font-style: italic; text-align: center;">*Escolha um dado ou clique no mesmo para repetir.</p>
+            <button id="btn-d20" class="btn-d20" onclick="selecionarAcao('d20', this)"><i>⬡</i>&nbsp;20</button>
+			 <button id="btn-d12" class="btn-d6" onclick="selecionarAcao('d12', this)"><i>⬡</i>&nbsp;12</button>
+			  <button id="btn-d10" class="btn-d6" onclick="selecionarAcao('d10', this)"><i>⬡</i>&nbsp;10</button>
+			  <button id="btn-d8" class="btn-d6" onclick="selecionarAcao('d8', this)"><i>⬡</i>&nbsp;8</button>
+            <button id="btn-d6-1" class="btn-d6" onclick="selecionarAcao('d6-1', this)"><img src="dados_icon.png" class="btn-icon">&nbsp;6</button>
+            <button id="btn-d6-2" class="btn-d6" onclick="selecionarAcao('d6-2', this)"><img src="dados_icon.png" class="btn-icon">&nbsp;x2</button>
+            <button id="btn-d6-3" class="btn-d6" onclick="selecionarAcao('d6-3', this)"><img src="dados_icon.png" class="btn-icon">&nbsp;x3</button>
+            <button onclick="voltarLP()" style="background:#666; margin-top:10px; font-size:10px">VOLTAR</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="area" id="area"></div>
+    </div>
+</div>
+
+<script>
+let lp1=0, lp2=0;
+let inputLP={1:'',2:''};
+let lpInicial={1:8000,2:8000};
+let acaoSelecionada = null;
+let modoDados = false;
+
+// Função auxiliar para gerenciar a classe 'selecionado' na sidebar
+function destacarBotao(elemento) {
+    const todosBotoes = document.querySelectorAll('.sidebar button');
+    todosBotoes.forEach(b => b.classList.remove('selecionado'));
+    if(elemento) elemento.classList.add('selecionado');
+}
+
+// --- SONS ORIGINAIS ---
+function tocarSom(tipo) {
+    let arquivo = "";
+    if (tipo === 'dado') arquivo = "dado.mp3";
+    else if (tipo === 'lp') arquivo = "lp.mp3";
+    else arquivo = "moeda.mp3";
+
+    const audio = new Audio(arquivo);
+    audio.play().catch(e => console.log("Erro ao tocar som: Talvez o arquivo não exista ainda."));
+}
+
+function toggleModoDados(el) {
+    destacarBotao(el);
+    modoDados = true;
+    document.getElementById('controles-padrao').classList.add('hidden');
+    document.getElementById('controles-dados').style.display = 'flex';
+    document.getElementById('area').innerHTML = `<button class="btn-ROLAR-grande" onclick="jogar()">ROLAR</button>`;
+}
+
+function voltarLP() {
+    modoDados = false;
+    document.getElementById('controles-padrao').classList.remove('hidden');
+    document.getElementById('controles-dados').style.display = 'none';
+    destacarBotao(lpInicial[1] === 8000 ? document.getElementById('btn-8000') : document.getElementById('btn-4000'));
+    renderizarLP();
+}
+
+function selecionarAcao(tipo, el) {
+    acaoSelecionada = tipo;
+    const botoesDados = document.querySelectorAll('.btn-group-dice button');
+    botoesDados.forEach(b => b.classList.remove('selecionado'));
+    el.classList.add('selecionado');
+    document.getElementById('area').innerHTML = `<button class="btn-ROLAR-grande" onclick="jogar()">ROLAR</button>`;
+}
+
+function jogar() {
+    if (!acaoSelecionada) { alert("Selecione um dado primeiro!"); return; }
+    switch(acaoSelecionada) {
+        case 'd20': d20(); break;
+		case 'd12': d12(3); break;
+		case 'd10': d10(3); break;
+		case 'd8': d8(3); break;
+        case 'd6-1': rolarD6(1); break;
+        case 'd6-2': rolarD6(2); break;
+        case 'd6-3': rolarD6(3); break;
+    }
+}
+
+function prepararMoeda(el) {
+    destacarBotao(el);
+    modoDados = true; 
+    document.getElementById('area').innerHTML = `<div class="moeda" onclick="girarMoeda(this)">GIRAR</div>`;
+}
+
+function girarMoeda(elemento) {
+    tocarSom('moeda');
+    elemento.classList.add('girar');
+    elemento.innerHTML = "?";
+    elemento.onclick = null;
+    setTimeout(() => {
+        elemento.classList.remove('girar');
+        const resultado = Math.random() < 0.5 ? "J1- PRIMEIRO <br> J2- SEGUNDO" : "J2- PRIMEIRO <br> J1- SEGUNDO";
+        elemento.innerHTML = resultado;
+        setTimeout(() => { elemento.onclick = () => prepararMoeda(document.getElementById('btn-moeda-main')); }, 1000);
+    }, 600);
+}
+
+function d20(){
+    tocarSom('dado');
+    const area=document.getElementById("area");
+    area.innerHTML='<div class="dado dado-d20 girar">?</div>';
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*20)+1)+'</div>'; },600);
+}
+
+function d12(){
+    tocarSom('dado');
+    const area=document.getElementById("area");
+    area.innerHTML='<div class="dado dado-d20 girar">?</div>';
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*12)+1)+'</div>'; },600);
+}
+
+function d10(){
+    tocarSom('dado');
+    const area=document.getElementById("area");
+    area.innerHTML='<div class="dado dado-d20 girar">?</div>';
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*10)+1)+'</div>'; },600);
+}
+
+function d8(){
+    tocarSom('dado');
+    const area=document.getElementById("area");
+    area.innerHTML='<div class="dado dado-d20 girar">?</div>';
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*8)+1)+'</div>'; },600);
+}
+
+function rolarD6(qtd){
+    tocarSom('dado');
+    const area=document.getElementById("area"); area.innerHTML="";
+    for(let i=0;i<qtd;i++){ area.innerHTML+='<div class="dado girar">?</div>'; }
+    setTimeout(()=>{
+        area.innerHTML="";
+        for(let i=0;i<qtd;i++){ area.innerHTML+='<div class="dado">'+(Math.floor(Math.random()*6)+1)+'</div>'; }
+    },600);
+}
+
+// --- LOGICA LP ---
+function iniciarLP(valor, el){
+    lp1=valor; lp2=valor; lpInicial[1]=valor; lpInicial[2]=valor;
+    destacarBotao(el);
+    voltarLP();
+}
+
+function renderizarLP(){
+    if(modoDados) return;
+    const area=document.getElementById("area");
+    area.innerHTML=`
+<div class="lp-container">
+    <div class="lp-player">
+        <div>JOGADOR 1</div>
+        <div id="display-lp1" class="lp-valor">${lp1}</div>
+        <div id="teclado1" class="lp-teclado"></div>
+        <div class="lp-controles">
+            <button class="btn-menos" onclick="aplicarLP(1, -1)">- DIMINUIR</button>
+            <button class="btn-mais" onclick="aplicarLP(1, 1)">+ AUMENTAR</button>
+        </div>
+    </div>
+    <div class="lp-player">
+        <div>JOGADOR 2</div>
+        <div id="display-lp2" class="lp-valor">${lp2}</div>
+        <div id="teclado2" class="lp-teclado"></div>
+        <div class="lp-controles">
+            <button class="btn-menos" onclick="aplicarLP(2, -1)">- DIMINUIR</button>
+            <button class="btn-mais" onclick="aplicarLP(2, 1)">+ AUMENTAR</button>
+        </div>
+    </div>
+</div>`;
+    criarTeclados();
+}
+
+function criarTeclados(){
+    for(let j=1;j<=2;j++){
+        const teclado=document.getElementById('teclado'+j);
+        if(!teclado) continue;
+        for(let i=1;i<=9;i++){
+            const btn=document.createElement('button');
+            btn.textContent=i; btn.onclick=()=>addNumero(j,i);
+            teclado.appendChild(btn);
+        }
+        const btn0=document.createElement('button'); btn0.textContent='0'; btn0.onclick=()=>addNumero(j,0); teclado.appendChild(btn0);
+        const btnC=document.createElement('button'); btnC.textContent='Cancelar'; btnC.onclick=()=>limparInput(j); teclado.appendChild(btnC);
+        const btnR=document.createElement('button'); btnR.textContent='Resetar'; btnR.onclick=()=>resetLP(j); teclado.appendChild(btnR);
+    }
+}
+
+function addNumero(jogador,num){ if(inputLP[jogador].length<6){ inputLP[jogador]+=num; atualizarDisplayInput(jogador); } }
+
+function atualizarDisplayInput(jogador){
+    const display=document.getElementById('display-lp'+jogador);
+    if(inputLP[jogador]!==''){ display.textContent=inputLP[jogador]; display.style.color='#ff4444'; }
+    else { display.textContent=jogador===1?lp1:lp2; display.style.color='#2cd2a8'; }
+}
+
+function aplicarLP(jogador, tipo) {
+    let valor = parseInt(inputLP[jogador]);
+    if (isNaN(valor) || valor <= 0) return;
+
+    // --- NOVA LÓGICA DE SOM ---
+    if (tipo === 1) {
+        // Se o tipo for 1 (Aumentar)
+        new Audio('ganhar_lp.mp3').play().catch(e => console.log("Erro som ganhar"));
+    } else {
+        // Se o tipo for -1 (Diminuir)
+        new Audio('perder_lp.mp3').play().catch(e => console.log("Erro som perder"));
+    }
+    // --------------------------
+
+    if (jogador === 1) lp1 = Math.max(0, lp1 + valor * tipo);
+    else lp2 = Math.max(0, lp2 + valor * tipo);
+
+    inputLP[jogador] = ''; 
+    atualizarDisplayInput(jogador);
+}
+
+function limparInput(jogador){ inputLP[jogador]=''; atualizarDisplayInput(jogador); }
+function resetLP(jogador){ 
+    if(jogador===1) lp1=lpInicial[1]; else lp2=lpInicial[2]; 
+    inputLP[jogador]=''; atualizarDisplayInput(jogador); 
+}
+
+window.onload = function() { 
+    const btnPadrao = document.getElementById('btn-8000');
+    iniciarLP(8000, btnPadrao); 
+};
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+
+screen.orientation.lock("landscape").catch(function(){});
+
+</script>
+</body>
+</html>
