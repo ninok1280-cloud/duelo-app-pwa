@@ -122,7 +122,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    width: 130px;
+    width: 100px;
     justify-content: center;
 }
 
@@ -216,7 +216,7 @@ button i { font-style: normal; display: block; font-size: 18px; }
 .lp-player { flex: 1; background: rgba(0, 0, 0, 0.5); padding: 5px; border-radius: 10px; border: 1px solid #007cc7; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
 .lp-valor { font-size: 2.5rem; font-weight: bold; color: #2cd2a8; }
 .lp-teclado { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: 100%; }
-.lp-teclado button { height: 32px; font-size: 14px; background: #333; }
+.lp-teclado button { height: 50px; font-size: 14px; background: #333; }
 /* Estilo base dos botões de controle de LP */
 .lp-controles { display: flex; gap: 5px; width: 100%; margin-top:4px; }
 .lp-controles button { font-size: 14px; flex: 1; height: 45px; background: #333; }
@@ -246,7 +246,7 @@ button i { font-style: normal; display: block; font-size: 18px; }
         </div>
 
         <div id="controles-dados" class="btn-group-dice">
-		<p style="font-style: italic; text-align: center;">*Escolha um dado ou clique no mesmo para repetir.</p>
+		<!--<p style="font-style: italic; text-align: center;">*Escolha um dado ou clique no mesmo para repetir.</p>-->
             <button id="btn-d20" class="btn-d20" onclick="selecionarAcao('d20', this)"><i>⬡</i>&nbsp;20</button>
 			 <button id="btn-d12" class="btn-d6" onclick="selecionarAcao('d12', this)"><i>⬡</i>&nbsp;12</button>
 			  <button id="btn-d10" class="btn-d6" onclick="selecionarAcao('d10', this)"><i>⬡</i>&nbsp;10</button>
