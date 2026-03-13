@@ -15,6 +15,46 @@
 
 <style>
 
+/* Fundo escuro cobrindo tudo */
+#overlay-inicio {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95); /* Quase preto */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Garante que fica por cima de tudo */
+    transition: opacity 0.8s ease; /* Suavidade no sumiço */
+}
+
+/* Estilo do botão */
+#btn-comecar {
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: #d32f2f; /* Vermelho vibrante */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(211, 47, 47, 0.5);
+}
+
+#btn-comecar:active {
+    transform: scale(0.95);
+}
+
+/* Classe para o fade-out via JS */
+.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+
 /* --- BASE E LAYOUT --- */
 html, body { width: 100%; height: 100vh; overflow: hidden; margin: 0; padding: 0; }
 
@@ -186,9 +226,8 @@ button i { font-style: normal; display: block; font-size: 18px; }
 </head>
 
 <body>
-<div id="aviso-orientacao">
-    <p>Por favor, vire seu dispositivo para o modo paisagem para jogar!</p>
-    <img src="icone-girar.png" width="50">
+<div id="overlay-inicio">
+    <button id="btn-comecar">COMEÇAR DUELO</button>
 </div>
 
 <div id="conteudo-principal">
@@ -230,6 +269,45 @@ let inputLP={1:'',2:''};
 let lpInicial={1:8000,2:8000};
 let acaoSelecionada = null;
 let modoDados = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('overlay-inicio');
+    const btn = document.getElementById('btn-comecar');
+
+    btn.addEventListener('click', async () => {
+        const docElm = document.documentElement;
+
+        // 1. Tentar entrar em Tela Cheia (Fullscreen)
+        try {
+            if (docElm.requestFullscreen) {
+                await docElm.requestFullscreen();
+            } else if (docElm.webkitRequestFullscreen) { // Safari/iOS
+                await docElm.webkitRequestFullscreen();
+            }
+        } catch (err) {
+            console.warn("Fullscreen negado:", err);
+        }
+
+        // 2. Tentar travar em Paisagem (Landscape)
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(err => {
+                console.warn("Trava de orientação não suportada neste dispositivo.");
+            });
+        }
+
+        // 3. Efeito de Fade para revelar o app
+        overlay.classList.add('fade-out');
+
+        // Opcional: Remover o elemento do DOM após o fade para economizar memória
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 800);
+        
+        // 4. Se você quiser que o duelo comece com 8000 LP automaticamente:
+        // resetLp(8000); 
+    });
+});
+
 
 // Função auxiliar para gerenciar a classe 'selecionado' na sidebar
 function destacarBotao(elemento) {
@@ -301,36 +379,36 @@ function girarMoeda(elemento) {
         elemento.classList.remove('girar');
         const resultado = Math.random() < 0.5 ? "J1- PRIMEIRO <br> J2- SEGUNDO" : "J2- PRIMEIRO <br> J1- SEGUNDO";
         elemento.innerHTML = resultado;
-        setTimeout(() => { elemento.onclick = () => prepararMoeda(document.getElementById('btn-moeda-main')); }, 1000);
-    }, 600);
+        setTimeout(() => { elemento.onclick = () => prepararMoeda(document.getElementById('btn-moeda-main')); }, 1200);
+    }, 1200);
 }
 
 function d20(){
     tocarSom('dado');
     const area=document.getElementById("area");
     area.innerHTML='<div class="dado dado-d20 girar">?</div>';
-    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*20)+1)+'</div>'; },600);
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*20)+1)+'</div>'; },1200);
 }
 
 function d12(){
     tocarSom('dado');
     const area=document.getElementById("area");
     area.innerHTML='<div class="dado dado-d20 girar">?</div>';
-    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*12)+1)+'</div>'; },600);
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*12)+1)+'</div>'; },1200);
 }
 
 function d10(){
     tocarSom('dado');
     const area=document.getElementById("area");
     area.innerHTML='<div class="dado dado-d20 girar">?</div>';
-    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*10)+1)+'</div>'; },600);
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*10)+1)+'</div>'; },1200);
 }
 
 function d8(){
     tocarSom('dado');
     const area=document.getElementById("area");
     area.innerHTML='<div class="dado dado-d20 girar">?</div>';
-    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*8)+1)+'</div>'; },600);
+    setTimeout(()=>{ area.innerHTML='<div class="dado dado-d20">'+(Math.floor(Math.random()*8)+1)+'</div>'; },1200);
 }
 
 function rolarD6(qtd){
@@ -340,7 +418,7 @@ function rolarD6(qtd){
     setTimeout(()=>{
         area.innerHTML="";
         for(let i=0;i<qtd;i++){ area.innerHTML+='<div class="dado">'+(Math.floor(Math.random()*6)+1)+'</div>'; }
-    },600);
+    },1200);
 }
 
 // --- LOGICA LP ---
