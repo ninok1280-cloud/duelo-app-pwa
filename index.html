@@ -227,8 +227,10 @@ button i { font-style: normal; display: block; font-size: 18px; }
 
 <body>
 <div id="overlay-inicio">
-    <button id="btn-comecar">COMEÇAR DUELO</button>
+    <button id="btn-comecar">INICIAR APP</button>
 </div>
+
+<audio id="som-inicio" src="duelo.mp3" preload="auto"></audio>
 
 <div id="conteudo-principal">
     </div>
@@ -274,38 +276,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay-inicio');
     const btn = document.getElementById('btn-comecar');
 
-    btn.addEventListener('click', async () => {
-        const docElm = document.documentElement;
 
-        // 1. Tentar entrar em Tela Cheia (Fullscreen)
-        try {
-            if (docElm.requestFullscreen) {
-                await docElm.requestFullscreen();
-            } else if (docElm.webkitRequestFullscreen) { // Safari/iOS
-                await docElm.webkitRequestFullscreen();
-            }
-        } catch (err) {
-            console.warn("Fullscreen negado:", err);
+
+btn.addEventListener('click', async () => {
+    const docElm = document.documentElement;
+    const som = document.getElementById('som-inicio');
+
+    // 1. Toca o som imediatamente
+    if (som) {
+        som.play().catch(err => console.log("Erro ao tocar áudio:", err));
+    }
+
+    // 2. Entra em Tela Cheia
+    try {
+        if (docElm.requestFullscreen) {
+            await docElm.requestFullscreen();
+        } else if (docElm.webkitRequestFullscreen) {
+            await docElm.webkitRequestFullscreen();
         }
+    } catch (err) {
+        console.warn("Fullscreen negado:", err);
+    }
 
-        // 2. Tentar travar em Paisagem (Landscape)
-        if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(err => {
-                console.warn("Trava de orientação não suportada neste dispositivo.");
-            });
-        }
+    // 3. Trava a orientação
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+    }
 
-        // 3. Efeito de Fade para revelar o app
-        overlay.classList.add('fade-out');
+    // 4. Efeito de Fade
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 800);
+});
 
-        // Opcional: Remover o elemento do DOM após o fade para economizar memória
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 800);
-        
-        // 4. Se você quiser que o duelo comece com 8000 LP automaticamente:
-        // resetLp(8000); 
-    });
 });
 
 
@@ -352,12 +356,14 @@ function selecionarAcao(tipo, el) {
 }
 
 function jogar() {
-    if (!acaoSelecionada) { alert("Selecione um dado primeiro!"); return; }
+    // Se não selecionou nada, a função apenas para de executar (return)
+    if (!acaoSelecionada) return; 
+
     switch(acaoSelecionada) {
         case 'd20': d20(); break;
-		case 'd12': d12(3); break;
-		case 'd10': d10(3); break;
-		case 'd8': d8(3); break;
+        case 'd12': d12(); break;
+        case 'd10': d10(); break;
+        case 'd8': d8(); break;
         case 'd6-1': rolarD6(1); break;
         case 'd6-2': rolarD6(2); break;
         case 'd6-3': rolarD6(3); break;
