@@ -31,6 +31,27 @@ body {
     color: white;
 }
 
+/* Aviso para girar o celular */
+#aviso-orientacao {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; color: #fff;
+    z-index: 9999;
+    text-align: center;
+    padding-top: 20%;
+}
+
+/* Só mostra o aviso se estiver em modo Retrato (Portrait) */
+@media screen and (orientation: portrait) {
+    #aviso-orientacao {
+        display: block;
+    }
+    #conteudo-principal {
+        display: none;
+    }
+}
+
 
 .btn-icon {
     width: 20px;       /* Largura do ícone */
@@ -165,6 +186,14 @@ button i { font-style: normal; display: block; font-size: 18px; }
 </head>
 
 <body>
+<div id="aviso-orientacao">
+    <p>Por favor, vire seu dispositivo para o modo paisagem para jogar!</p>
+    <img src="icone-girar.png" width="50">
+</div>
+
+<div id="conteudo-principal">
+    </div>
+	
 <div class="container">
     <div class="sidebar">
         <div id="controles-padrao">
