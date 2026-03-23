@@ -393,7 +393,7 @@ function girarMoeda(elemento) {
     elemento.onclick = null;
     setTimeout(() => {
         elemento.classList.remove('girar');
-        const resultado = Math.random() < 0.5 ? "J1- PRIMEIRO <br> J2- SEGUNDO" : "J2- PRIMEIRO <br> J1- SEGUNDO";
+        const resultado = Math.random() < 0.5 ? "🟥 PRIMEIRO <br> 🟦 SEGUNDO" : "🟦 PRIMEIRO <br> 🟥 SEGUNDO";
         elemento.innerHTML = resultado;
         setTimeout(() => { elemento.onclick = () => prepararMoeda(document.getElementById('btn-moeda-main')); }, 1200);
     }, 1200);
