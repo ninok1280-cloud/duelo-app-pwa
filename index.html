@@ -213,7 +213,7 @@ button i { font-style: normal; display: block; font-size: 18px; }
     touch-action: manipulation;
     width: 160px; height: 160px; border-radius: 50%; 
     display: flex; align-items: center; justify-content: center; 
-    font-size: 18px; background: linear-gradient(145deg, #ffd700, #ff8c00); 
+    font-size: 21px; background: linear-gradient(145deg, #ffd700, #ff8c00); 
     color: #3e2723; font-weight: bold; border: 4px solid #fff176; 
 	text-align: center;
     cursor: pointer;
@@ -461,20 +461,20 @@ function rolarD6(qtd){
 
     const area = document.getElementById("area");
 
-    // cria container horizontal
-    area.innerHTML = `<div class="dados-linha" id="linhaDados"></div>`;
+    // cria uma linha horizontal
+    area.innerHTML = '<div id="linhaDados" style="display:flex; gap:10px; justify-content:center;"></div>';
     const linha = document.getElementById("linhaDados");
 
-    // animação
-    for(let i=0;i<qtd;i++){
-        linha.innerHTML += '<div class="dado girar">?</div>';
+    // animação inicial
+    for(let i=0;i<qtd;i++){ 
+        linha.innerHTML += '<div class="dado girar">?</div>'; 
     }
 
     // resultado final
     setTimeout(()=>{
         linha.innerHTML = "";
-        for(let i=0;i<qtd;i++){
-            linha.innerHTML += '<div class="dado">'+(Math.floor(Math.random()*6)+1)+'</div>';
+        for(let i=0;i<qtd;i++){ 
+            linha.innerHTML += '<div class="dado">'+(Math.floor(Math.random()*6)+1)+'</div>'; 
         }
     },1200);
 }
