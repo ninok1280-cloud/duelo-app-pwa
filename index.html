@@ -112,9 +112,10 @@ body {
     display: flex;
     flex-direction: row;
     height: 100vh;
-    padding: 10px;
+    /* Remova ou ajuste o padding e o gap */
+    padding: 0; 
+    gap: 0; 
     box-sizing: border-box;
-    gap: 15px;
 }
 
 /* --- BARRA LATERAL --- */
@@ -122,8 +123,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    width: 100px;
+    width: 110px; /* Aumentei um pouco para compensar o ícone */
     justify-content: center;
+    padding: 10px; /* Adiciona o espaço interno apenas na barra lateral */
 }
 
 .btn-group-dice {
@@ -187,11 +189,11 @@ button i { font-style: normal; display: block; font-size: 18px; }
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,0.3);
-    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0; /* Removi o arredondamento para encostar perfeitamente */
     padding: 10px;
+    height: 100%; /* Garante que ocupa a altura toda */
 }
-
 
 .area { 
     display: flex; 
@@ -258,7 +260,7 @@ button i { font-style: normal; display: block; font-size: 18px; }
     <div class="sidebar">
         <div id="controles-padrao">
 		    <!-- LOGO -->
-    <div style="text-align:center; margin-bottom:10px;">
+    <div style="text-align:center; margin-bottom:10px;    margin-left: 1px;">
         <img src="pngneuron.png" style="width:100px; filter: drop-shadow(0 0 5px #00ffcc);">
     </div>
 	
