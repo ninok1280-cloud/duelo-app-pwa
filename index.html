@@ -234,6 +234,13 @@ button i { font-style: normal; display: block; font-size: 18px; }
 .lp-controles button { font-size: 14px; flex: 1; height: 45px; background: #333; }
 
 .hidden { display: none !important; }
+
+.dados-linha {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
 </style>
 </head>
 
@@ -398,7 +405,7 @@ function prepararMoeda(el) {
 </div>
 
 <div style="text-align:center; margin-bottom:15px; font-size:16px;">
-   J1 🟥 Vermelho &nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; J2 🟦 Azul
+   Jogador 1 🟥 &nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jogador 2 🟦
 </div>
 
 <div class="moeda" onclick="girarMoeda(this)">
@@ -451,11 +458,24 @@ function d8(){
 
 function rolarD6(qtd){
     tocarSom('dado');
-    const area=document.getElementById("area"); area.innerHTML="";
-    for(let i=0;i<qtd;i++){ area.innerHTML+='<div class="dado girar">?</div>'; }
+
+    const area = document.getElementById("area");
+
+    // cria container horizontal
+    area.innerHTML = `<div class="dados-linha" id="linhaDados"></div>`;
+    const linha = document.getElementById("linhaDados");
+
+    // animação
+    for(let i=0;i<qtd;i++){
+        linha.innerHTML += '<div class="dado girar">?</div>';
+    }
+
+    // resultado final
     setTimeout(()=>{
-        area.innerHTML="";
-        for(let i=0;i<qtd;i++){ area.innerHTML+='<div class="dado">'+(Math.floor(Math.random()*6)+1)+'</div>'; }
+        linha.innerHTML = "";
+        for(let i=0;i<qtd;i++){
+            linha.innerHTML += '<div class="dado">'+(Math.floor(Math.random()*6)+1)+'</div>';
+        }
     },1200);
 }
 
