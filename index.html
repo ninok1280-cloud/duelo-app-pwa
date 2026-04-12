@@ -303,7 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay-inicio');
     const btn = document.getElementById('btn-comecar');
 
-
+function travarLandscape() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+    }
+}
 
 btn.addEventListener('click', async () => {
     const docElm = document.documentElement;
@@ -326,9 +330,7 @@ btn.addEventListener('click', async () => {
     }
 
     // 3. Trava a orientação
-    if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {});
-    }
+    setTimeout(travarLandscape, 300);
 
     // 4. Efeito de Fade
     overlay.classList.add('fade-out');
@@ -584,6 +586,21 @@ document.querySelectorAll('.sidebar button').forEach(btn => {
     });
 });
 
+// Reforço automático da orientação
+
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+        travarLandscape();
+    }
+});
+
+window.addEventListener("focus", () => {
+    travarLandscape();
+});
+
+window.addEventListener("orientationchange", () => {
+    setTimeout(travarLandscape, 300);
+});
 </script>
 </body>
 </html>
