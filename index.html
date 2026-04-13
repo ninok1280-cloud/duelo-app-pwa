@@ -158,9 +158,15 @@ button i { font-style: normal; display: block; font-size: 18px; }
 .btn-moeda { background: #ffc107; color: #333; font-weight: bold; font-size:12px;}
 .btn-dados-toggle { background: #e73725eb; font-weight: bold; font-size:12px;}
 .btn-lp-init { background: #007cc7; color: #fff; font-weight: bold; font-size:12px;}
-.btn-reset { background: #6895ba; color: black; font-weight: bold; font-size:12px; }
 .btn-d20 { background: #e73725eb; font-weight: bold; font-size:12px }
 .btn-d6 { background: #e73725eb; font-weight: bold; font-size:12px}
+
+#btn-fullscreen-toggle {
+ background: #6895ba;
+ color: black;
+ font-weight: bold;
+ font-size:12px; 
+}
 
 /* CORES APENAS NO TEXTO DOS BOTÕES + E - NO LP */
 /* Mantém o fundo original cinza (#333) e muda só a cor da fonte */
@@ -271,7 +277,8 @@ button i { font-style: normal; display: block; font-size: 18px; }
 		</button>
             <button id="btn-8000" class="btn-lp-init" onclick="iniciarLP(8000, this)" style="margin-bottom: 6px;">8000 LP</button>
             <button id="btn-4000" class="btn-lp-init" onclick="iniciarLP(4000, this)" style="margin-bottom: 6px;">4000 LP</button>
-            <button class="btn-reset" onclick="location.reload()"> <img src="gear_icon.png" class="btn-icon"></button>
+			<button id="btn-fullscreen-toggle"> <img src="gear_icon.png" class="btn-icon"> </button>
+           
         </div>
 
         <div id="controles-dados" class="btn-group-dice">
@@ -303,11 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay-inicio');
     const btn = document.getElementById('btn-comecar');
 
-function travarLandscape() {
-    if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {});
-    }
-}
+
 
 btn.addEventListener('click', async () => {
     const docElm = document.documentElement;
@@ -330,7 +333,9 @@ btn.addEventListener('click', async () => {
     }
 
     // 3. Trava a orientação
-    setTimeout(travarLandscape, 300);
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+    }
 
     // 4. Efeito de Fade
     overlay.classList.add('fade-out');
@@ -586,21 +591,43 @@ document.querySelectorAll('.sidebar button').forEach(btn => {
     });
 });
 
-// Reforço automático da orientação
+const btnFullscreen = document.getElementById('btn-fullscreen-toggle');
 
-document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-        travarLandscape();
+btnFullscreen.addEventListener('click', async () => {
+    const doc = document.documentElement;
+
+    if (!document.fullscreenElement) {
+        // ENTRAR EM FULLSCREEN
+        try {
+            if (doc.requestFullscreen) {
+                await doc.requestFullscreen();
+            } else if (doc.webkitRequestFullscreen) {
+                await doc.webkitRequestFullscreen();
+            }
+
+            // Tenta travar em paisagem
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
+
+        } catch (e) {
+            console.log("Erro ao entrar fullscreen:", e);
+        }
+
+    } else {
+        // SAIR DO FULLSCREEN
+        try {
+            if (document.exitFullscreen) {
+                await document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                await document.webkitExitFullscreen();
+            }
+        } catch (e) {
+            console.log("Erro ao sair fullscreen:", e);
+        }
     }
 });
 
-window.addEventListener("focus", () => {
-    travarLandscape();
-});
-
-window.addEventListener("orientationchange", () => {
-    setTimeout(travarLandscape, 300);
-});
 </script>
 </body>
 </html>
