@@ -158,7 +158,40 @@ button i { font-style: normal; display: block; font-size: 18px; }
 .btn-moeda { background: #ffc107; color: #333; font-weight: bold; font-size:12px;}
 .btn-dados-toggle { background: #e73725eb; font-weight: bold; font-size:12px;}
 .btn-lp-init { background: #007cc7; color: #fff; font-weight: bold; font-size:12px;}
-.btn-d20 { background: #e73725eb; font-weight: bold; font-size:12px }
+
+/* Estilo Especial para o D20 */
+.btn-d20 {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientAnim 5s ease infinite, pulseGlow 2s infinite;
+    font-weight: bold;
+    font-size: 16px !important; /* Um pouco maior que os outros */
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    text-shadow: 0 0 5px black;
+    box-shadow: 0 0 15px rgba(231, 60, 126, 0.5);
+}
+
+/* Animação das cores do fundo */
+@keyframes gradientAnim {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Animação de brilho pulsante */
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 5px rgba(35, 213, 171, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(231, 60, 126, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(35, 213, 171, 0.4); }
+}
+
+/* Efeito ao passar o mouse ou clicar no D20 */
+.btn-d20:active {
+    transform: scale(1.1) rotate(5deg) !important; /* Ele cresce em vez de diminuir */
+}
+
+
+.btn-d12108 { background: #ff3d00c2; font-weight: bold; font-size:12px}
 .btn-d6 { background: #e73725eb; font-weight: bold; font-size:12px}
 
 #btn-fullscreen-toggle {
@@ -284,9 +317,9 @@ button i { font-style: normal; display: block; font-size: 18px; }
         <div id="controles-dados" class="btn-group-dice">
 		<!--<p style="font-style: italic; text-align: center;">*Escolha um dado ou clique no mesmo para repetir.</p>-->
             <button id="btn-d20" class="btn-d20" onclick="selecionarAcao('d20', this)"><i>⬡</i>&nbsp;20</button>
-			 <button id="btn-d12" class="btn-d6" onclick="selecionarAcao('d12', this)"><i>⬡</i>&nbsp;12</button>
-			  <button id="btn-d10" class="btn-d6" onclick="selecionarAcao('d10', this)"><i>⬡</i>&nbsp;10</button>
-			  <button id="btn-d8" class="btn-d6" onclick="selecionarAcao('d8', this)"><i>⬡</i>&nbsp;8</button>
+			 <button id="btn-d12" class="btn-d12108" onclick="selecionarAcao('d12', this)"><i>⬡</i>&nbsp;12</button>
+			  <button id="btn-d10" class="btn-d12108" onclick="selecionarAcao('d10', this)"><i>⬡</i>&nbsp;10</button>
+			  <button id="btn-d8" class="btn-d12108" onclick="selecionarAcao('d8', this)"><i>⬡</i>&nbsp;8</button>
             <button id="btn-d6-1" class="btn-d6" onclick="selecionarAcao('d6-1', this)"><img src="dados_icon.png" class="btn-icon">&nbsp;6</button>
             <button id="btn-d6-2" class="btn-d6" onclick="selecionarAcao('d6-2', this)"><img src="dados_icon.png" class="btn-icon">&nbsp;x2</button>
             <button id="btn-d6-3" class="btn-d6" onclick="selecionarAcao('d6-3', this)"><img src="dados_icon.png" class="btn-icon">&nbsp;x3</button>
